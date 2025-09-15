@@ -39,10 +39,25 @@ class FileSystemMCPServer {
 
   ensureWorkspaceDirectory() {
     try {
+      // First try to create the parent directory if it doesn't exist
+      const parentDir = path.dirname(this.workspaceDir);
+      if (!fs.existsSync(parentDir)) {
+        console.error('Parent directory does not exist:', parentDir);
+        console.error('Available directories:');
+        console.error(fs.readdirSync('/'));
+      }
       fs.ensureDirSync(this.workspaceDir);
     } catch (error) {
       console.error('Failed to create workspace directory:', error);
-      throw error;
+      // Fallback to /tmp if /app doesn't work
+      this.workspaceDir = '/tmp/filesystem-workspace';
+      try {
+        fs.ensureDirSync(this.workspaceDir);
+        console.error('Using fallback workspace directory:', this.workspaceDir);
+      } catch (fallbackError) {
+        console.error('Fallback workspace creation also failed:', fallbackError);
+        throw fallbackError;
+      }
     }
   }
 
