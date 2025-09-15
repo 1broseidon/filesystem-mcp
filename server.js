@@ -30,7 +30,7 @@ class FileSystemMCPServer {
     );
 
     // Set up workspace directory
-    this.workspaceDir = process.env.WORKSPACE_DIR || '/tmp/workspace';
+    this.workspaceDir = process.env.WORKSPACE_DIR || '/app/workspace';
     this.ensureWorkspaceDirectory();
     this.setupHandlers();
 
